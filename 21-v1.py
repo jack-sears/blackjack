@@ -7,8 +7,55 @@ draws = 0
 num_correct = 0
 num_incorrect = 0
 
-def generate_split_dict(rules, k_range=range(1, 12)):
+def generate_split_dict(rules, k_range=range(2, 12)):
     		return {k: rules(k) for k in k_range}
+
+basic_phrases = {
+    "pair_splitting": {
+        4: "A pair of 2's splits against dealer 2 through 7, otherwise hit.",
+        6: "A pair of 3's splits against dealer 2 through 7, otherwise hit.",
+        8: "A pair of 4's splits against dealer 5 and 6, otherwise hit.",
+        10: "A pair of 5's doubles against dealer 2 through 9, otherwise hit.",
+        12: "A pair of 6's splits against dealer 2 through 6, otherwise hit.",
+        14: "A pair of 7’s splits against dealer 2 through 7, otherwise hit.",
+        16: "Always split 8’s.",
+        18: "A pair of 9’s splits against dealer 2 through 9, except for 7, otherwise stand.",
+        20: "Never split tens.",
+        22: "Always split aces.",
+    },
+	
+	"soft_totals": {
+        13: "Soft 13 (A,2) doubles against dealer 5 through 6, otherwise hit.",
+        14: "Soft 14 (A,3) doubles against dealer 5 through 6, otherwise hit.",
+        15: "Soft 15 (A,4) doubles against dealer 4 through 6, otherwise hit.",
+        16: "Soft 16 (A,5) doubles against dealer 4 through 6, otherwise hit.",
+        17: "Soft 17 (A,6) doubles against dealer 3 through 6, otherwise hit.",
+        18: "Soft 18 (A,7) doubles against dealer 2 through 6, and hits against 9 through Ace, otherwise stand.",
+        19: "Soft 19 (A,8) doubles against dealer 6, otherwise stand.",
+        20: "Soft 20 (A,9) always stands.",
+    },
+	
+    "hard_totals": {
+		4: "8 or lower always hits.",
+        5: "8 or lower always hits.",
+        6: "8 or lower always hits.",
+        7: "8 or lower always hits.",
+        8: "8 or lower always hits.",
+        9: "9 doubles against dealer 3 through 6 otherwise hit.",
+        10: "10 doubles against dealer 2 through 9 otherwise hit.",
+        11: "11 always doubles.",
+        12: "12 stands against dealer 4 through 6, otherwise hit.",
+        13: "13 stands against dealer 2 through 6, otherwise hit.",
+        14: "14 stands against dealer 2 through 6, otherwise hit.",
+        15: "15 stands against dealer 2 through 6, otherwise hit.",
+        16: "16 stands against dealer 2 through 6, otherwise hit.",
+        17: "17 and up always stands.",
+        18: "17 and up always stands.",
+        19: "17 and up always stands.",
+        20: "17 and up always stands.",
+        21: "17 and up always stands.",
+    },
+}
 
 basic_strategy = {
     # Pair Splitting (simplified)
@@ -32,7 +79,7 @@ basic_strategy = {
         16: generate_split_dict(lambda k: "D" if k in {4,5,6} else "H"),
         17:generate_split_dict(lambda k: "D" if k in {3,4,5,6} else "H"),
         18:generate_split_dict(lambda k: "S" if k in {7,8} else "H" if k in {9,10,11} else "Ds"),
-        19: generate_split_dict(lambda k: "Ds" if k == 8 else "S"),
+        19: generate_split_dict(lambda k: "Ds" if k == 6 else "S"),
         20: "S",
         21: "S",
     },
@@ -90,6 +137,7 @@ def print_blackjack_strategy_table(strategy_dict):
                 row += f"{strategy:>3}"
             print(row)
         print("-" * 70)
+        print("KEY: H = hit, S = stand, D = Double if available, else hit, Ds = Double if available, else stand, Y = yes, N = no")
 
 
 def print_dash(num):
@@ -118,80 +166,35 @@ def get_num_aces(hand):
 def evaluate_move(player_hand, player_total, dealer_upcard, move):
     # Simplified basic strategy
     global basic_strategy
-    '''basic_strategy = {
-    # Pair Splitting (simplified)
-		"pair_splitting": {
-		    4: generate_split_dict(lambda k: "Y" if 1 < k < 8 else "N"),
-		    6: generate_split_dict(lambda k: "Y" if 1 < k < 8 else "N"),
-		    8: generate_split_dict(lambda k: "Y" if k in {5, 6} else "N"),
-		    10: "N",
-		    12: generate_split_dict(lambda k: "Y" if 1 < k < 7 else "N"),
-		    14: generate_split_dict(lambda k: "Y" if 1 < k < 8 else "N"),
-		    16: "Y",
-		    18: generate_split_dict(lambda k: "N" if k in {7, 10, 11} else "Y"),
-		    20: "N",
-		    22: "Y",
-		},
-    # Soft Totals (simplified)
-    "soft_totals": {
-        13: generate_split_dict(lambda k: "D" if k in {5,6} else "H"),
-        14: generate_split_dict(lambda k: "D" if k in {5,6} else "H"),
-        15: generate_split_dict(lambda k: "D" if k in {4,5,6} else "H"),
-        16: generate_split_dict(lambda k: "D" if k in {4,5,6} else "H"),
-        17:generate_split_dict(lambda k: "D" if k in {3,4,5,6} else "H"),
-        18:generate_split_dict(lambda k: "S" if k in {7,8} else "H" if k in {9,10,11} else "Ds"),
-        19: generate_split_dict(lambda k: "Ds" if k == 8 else "S"),
-        20: "S",
-        21: "S",
-    },
-
-    # Hard Totals (simplified)
-    "hard_totals": {
-    		5: "H",
-    		6: "H",
-    		7: "H",
-    		8: "H",
-    		# Always Hit on hard 8 or less
-    		9: generate_split_dict(lambda k: "D" if k in {3,4,5,6} else "H"),
-    		10: generate_split_dict(lambda k: "H" if k in {10,11} else "D"),
-    		11: "D",
-    		12: generate_split_dict(lambda k: "S" if k in {4,5,6} else "H"),
-    		13: generate_split_dict(lambda k: "S" if k in {2,3,4,5,6} else "H"),
-    		14: generate_split_dict(lambda k: "S" if k in {2,3,4,5,6} else "H"),
-    		15: generate_split_dict(lambda k: "S" if k in {2,3,4,5,6} else "H"),
-    		16: generate_split_dict(lambda k: "S" if k in {2,3,4,5,6} else "H"),
-        17: "S",  # Always Stand on hard 17
-        18: "S",
-        19: "S",
-        20: "S",
-        21: "S" 
-    },
-}'''
-    key = (player_total, dealer_upcard)
+    global basic_phrases
     global asked_split, num_correct, num_incorrect
+    key = (player_total, dealer_upcard)
     if (player_hand[0]['value'] == player_hand[1]['value'] and asked_split):
-				#splits
+        #splits
         strategy = basic_strategy.get("pair_splitting", {}).get(player_total, "unknown")
+        phrase = basic_phrases.get("pair_splitting", {}).get(player_total, "unknown")
         if len(player_hand) != 2:
-        		if strategy == 'D':
-        				strategy = 'H'
+            if strategy == 'D':
+                strategy = 'H'
         asked_split = False
     elif ((player_hand[0]['value'] == 11 or player_hand[1]['value'] == 11) and get_num_aces(player_hand)==1):
         strategy = basic_strategy.get("soft_totals", {}).get(player_total, "unknown")
+        phrase = basic_phrases.get("soft_totals", {}).get(player_total, "unknown")
         if len(player_hand) != 2:
-        		if strategy == 'D':
-        				strategy = 'H'
-        		elif strategy == 'Ds':
-        				strategy = 'S'
+            if strategy == 'D':
+                strategy = 'H'
+            elif strategy == 'Ds':
+                strategy = 'S'
         else:
-        		if strategy == 'Ds':
-        				strategy = 'D'
+            if strategy == 'Ds':
+                strategy = 'D'
     else:
-    		#hard totals
-    		strategy = basic_strategy.get("hard_totals", {}).get(player_total, "unknown")
-    		if len(player_hand) != 2:
-        		if strategy == 'D':
-        				strategy = 'H'
+    	#hard totals
+        strategy = basic_strategy.get("hard_totals", {}).get(player_total, "unknown")
+        phrase = basic_phrases.get("hard_totals", {}).get(player_total, "unknown")
+        if len(player_hand) != 2:
+            if strategy == 'D':
+                strategy = 'H'
     	
    	# Handle cases where strategy is a dictionary (generated by generate_split_dict)
     if isinstance(strategy, dict):
@@ -206,7 +209,7 @@ def evaluate_move(player_hand, player_total, dealer_upcard, move):
         return f"Correct! The basic strategy is to {correct_move}."
     else:
         num_incorrect += 1
-        return f"Incorrect. The correct move was to {correct_move}."
+        return f"Incorrect. The correct move was to {correct_move}.\n{phrase}"
 
 def calculate_total(hand):
     total = sum(card['value'] for card in hand)
@@ -233,7 +236,7 @@ def play_hand(deck, hand, dealer_upcard_value):
 
         print(f"Your total is {player_total}.")
         print_dash(20)
-        move = input("Hit, Stand, or Double? ").strip().upper()
+        move = input("Hit, Stand, or Double? (h,s,d)").strip().upper()
 
         # Get feedback for move
         feedback = evaluate_move(hand, player_total, dealer_upcard_value, move)
@@ -272,7 +275,7 @@ def play_blackjack():
     split_hand = None
     global asked_split
     if player_hand[0]['value'] == player_hand[1]['value']:
-        split = input("Would you like to split? (Y/N) ").strip().upper()
+        split = input("Would you like to split? (y/n) ").strip().upper()
         asked_split = True
         feedback = evaluate_move(player_hand, calculate_total(player_hand), dealer_upcard_value, split)
         print(feedback)
@@ -295,7 +298,7 @@ def play_blackjack():
     # Dealer's turn
     dealer_hand.append(deck.pop())  # Reveal dealer's second card
     if calculate_total(player_hand) < 22:
-    		dealer_hand = dealer_turn(deck, dealer_hand)
+        dealer_hand = dealer_turn(deck, dealer_hand)
     dealer_total = calculate_total(dealer_hand)
 
     # Print the dealer's hand
@@ -325,21 +328,23 @@ def play_blackjack():
 
 # Play the game
 while(True):
-		play_blackjack()
-		print()
-		str = input('Type \'stop\' to end game.')
-		if str != 'stop':
-				#print_blackjack_strategy_table(basic_strategy)
-				print("----- New Hand -----")
-				print()
-		else:
-				print_dash(25)
-				print('Training Session Finished')
-				print_dash(25)
-				print(f'Wins: {wins}\nLosses: {losses}\nDraws: {draws}\n\nCorrect moves: {num_correct}\nIncorrect moves: {num_incorrect}\n')
-				print_dash(25)
-				break
-
+    play_blackjack()
+    print()
+    str = input('Type \'stop\' to end game.\nType \'chart\' to see book moves.\n Press anything else to continue.')
+    if str == 'stop':
+        print_dash(25)
+        print('Training Session Finished')
+        print_dash(25)
+        print(f'Wins: {wins}\nLosses: {losses}\nDraws: {draws}\n\nCorrect moves: {num_correct}\nIncorrect moves: {num_incorrect}\n')
+        print(f'Your accuracy: {num_correct/(num_correct+num_incorrect)}%')
+        print_dash(25)				
+        break
+    elif str == 'chart':
+        print_blackjack_strategy_table(basic_strategy)
+    else:
+        print("----- New Hand -----")
+        print()
+input("Press Enter to exit...")
 '''
 # Example game
 deck = create_deck()
