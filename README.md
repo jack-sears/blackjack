@@ -18,4 +18,4 @@ You can download the program [here](https://github.com/jack-sears/blackjack/blob
 - **Front-End**: Build a graphical user interface (GUI) to replace the terminal-based gameplay for a more engaging experience.
 
 ## PDF Guide - Black Jack strategy by the book
-[Click here to view the PDF guide]([https://github.com/your-username/your-repo-name/blob/main/your-pdf-file.pdf](https://github.com/jack-sears/blackjack/blob/main/graphics/H17-Basic-Strategy.pdf))
+Click [here](https://github.com/jack-sears/blackjack/blob/main/graphics/H17-Basic-Strategy.pdf) to view the PDF guide
