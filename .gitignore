@@ -1,3 +1,4 @@
 build/
 venv/
 21-v1.spec
+.gitignore
