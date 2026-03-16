@@ -12,10 +12,5 @@ You can download the program [here](https://github.com/jack-sears/blackjack/blob
 3. Run the program using `python blackjack.py`.
 4. Follow the prompts to play the game!
 
-## Future Functionality
-- **Betting**: Add a system where users start with a set amount of money and can place bets on each hand. The amount updates based on wins/losses.
-- **AI Training**: Introduce an AI component that tracks the user's move history and prioritizes weaker hands for practice.
-- **Front-End**: Build a graphical user interface (GUI) to replace the terminal-based gameplay for a more engaging experience.
-
 ## PDF Guide - Black Jack strategy by the book
 Click [here](https://github.com/jack-sears/blackjack/blob/main/graphics/H17-Basic-Strategy.pdf) to view the PDF guide
