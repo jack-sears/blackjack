@@ -4,8 +4,6 @@
 Welcome to my BlackJack Trainer! This program simulates a Blackjack game and provides feedback on optimal strategies.
 Optimal strategies can be found under the PDF Guide section listed below.
 
-You can download the program [here](https://github.com/jack-sears/blackjack/blob/main/dist/21-v1.exe). The program currently just runs in the terminal.
-
 ## How to Use
 
 ### GUI Version (Recommended)
