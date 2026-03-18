@@ -27,3 +27,4 @@ You can download the program [here](https://github.com/jack-sears/blackjack/blob
 
 ## PDF Guide - Black Jack strategy by the book
 Click [here](https://github.com/jack-sears/blackjack/blob/main/graphics/H17-Basic-Strategy.pdf) to view the PDF guide
+ 
