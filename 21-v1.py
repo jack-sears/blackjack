@@ -8,7 +8,7 @@ num_correct = 0
 num_incorrect = 0
 
 def generate_split_dict(rules, k_range=range(2, 12)):
-    		return {k: rules(k) for k in k_range}
+    return {k: rules(k) for k in k_range}
 
 basic_phrases = {
     "pair_splitting": {
@@ -23,8 +23,8 @@ basic_phrases = {
         20: "Never split tens.",
         22: "Always split aces.",
     },
-	
-	"soft_totals": {
+    
+    "soft_totals": {
         13: "Soft 13 (A,2) doubles against dealer 5 through 6, otherwise hit.",
         14: "Soft 14 (A,3) doubles against dealer 5 through 6, otherwise hit.",
         15: "Soft 15 (A,4) doubles against dealer 4 through 6, otherwise hit.",
@@ -34,9 +34,9 @@ basic_phrases = {
         19: "Soft 19 (A,8) doubles against dealer 6, otherwise stand.",
         20: "Soft 20 (A,9) always stands.",
     },
-	
+    
     "hard_totals": {
-		4: "8 or lower always hits.",
+        4: "8 or lower always hits.",
         5: "8 or lower always hits.",
         6: "8 or lower always hits.",
         7: "8 or lower always hits.",
@@ -59,26 +59,26 @@ basic_phrases = {
 
 basic_strategy = {
     # Pair Splitting (simplified)
-		"pair_splitting": {
-		    4: generate_split_dict(lambda k: "Y" if 1 < k < 8 else "N"),
-		    6: generate_split_dict(lambda k: "Y" if 1 < k < 8 else "N"),
-		    8: generate_split_dict(lambda k: "Y" if k in {5, 6} else "N"),
-		    10: "N",
-		    12: generate_split_dict(lambda k: "Y" if 1 < k < 7 else "N"),
-		    14: generate_split_dict(lambda k: "Y" if 1 < k < 8 else "N"),
-		    16: "Y",
-		    18: generate_split_dict(lambda k: "N" if k in {7, 10, 11} else "Y"),
-		    20: "N",
-		    22: "Y",
-		},
+    "pair_splitting": {
+        4: generate_split_dict(lambda k: "Y" if 1 < k < 8 else "N"),
+        6: generate_split_dict(lambda k: "Y" if 1 < k < 8 else "N"),
+        8: generate_split_dict(lambda k: "Y" if k in {5, 6} else "N"),
+        10: "N",
+        12: generate_split_dict(lambda k: "Y" if 1 < k < 7 else "N"),
+        14: generate_split_dict(lambda k: "Y" if 1 < k < 8 else "N"),
+        16: "Y",
+        18: generate_split_dict(lambda k: "N" if k in {7, 10, 11} else "Y"),
+        20: "N",
+        22: "Y",
+    },
     # Soft Totals (simplified)
     "soft_totals": {
         13: generate_split_dict(lambda k: "D" if k in {5,6} else "H"),
         14: generate_split_dict(lambda k: "D" if k in {5,6} else "H"),
         15: generate_split_dict(lambda k: "D" if k in {4,5,6} else "H"),
         16: generate_split_dict(lambda k: "D" if k in {4,5,6} else "H"),
-        17:generate_split_dict(lambda k: "D" if k in {3,4,5,6} else "H"),
-        18:generate_split_dict(lambda k: "S" if k in {7,8} else "H" if k in {9,10,11} else "Ds"),
+        17: generate_split_dict(lambda k: "D" if k in {3,4,5,6} else "H"),
+        18: generate_split_dict(lambda k: "S" if k in {7,8} else "H" if k in {9,10,11} else "Ds"),
         19: generate_split_dict(lambda k: "Ds" if k == 6 else "S"),
         20: "S",
         21: "S",
@@ -86,19 +86,19 @@ basic_strategy = {
 
     # Hard Totals (simplified)
     "hard_totals": {
-    		5: "H",
-    		6: "H",
-    		7: "H",
-    		8: "H",
-    		# Always Hit on hard 8 or less
-    		9: generate_split_dict(lambda k: "D" if k in {3,4,5,6} else "H"),
-    		10: generate_split_dict(lambda k: "H" if k in {10,11} else "D"),
-    		11: "D",
-    		12: generate_split_dict(lambda k: "S" if k in {4,5,6} else "H"),
-    		13: generate_split_dict(lambda k: "S" if k in {2,3,4,5,6} else "H"),
-    		14: generate_split_dict(lambda k: "S" if k in {2,3,4,5,6} else "H"),
-    		15: generate_split_dict(lambda k: "S" if k in {2,3,4,5,6} else "H"),
-    		16: generate_split_dict(lambda k: "S" if k in {2,3,4,5,6} else "H"),
+        5: "H",
+        6: "H",
+        7: "H",
+        8: "H",
+        # Always Hit on hard 8 or less
+        9: generate_split_dict(lambda k: "D" if k in {3,4,5,6} else "H"),
+        10: generate_split_dict(lambda k: "H" if k in {10,11} else "D"),
+        11: "D",
+        12: generate_split_dict(lambda k: "S" if k in {4,5,6} else "H"),
+        13: generate_split_dict(lambda k: "S" if k in {2,3,4,5,6} else "H"),
+        14: generate_split_dict(lambda k: "S" if k in {2,3,4,5,6} else "H"),
+        15: generate_split_dict(lambda k: "S" if k in {2,3,4,5,6} else "H"),
+        16: generate_split_dict(lambda k: "S" if k in {2,3,4,5,6} else "H"),
         17: "S",  # Always Stand on hard 17
         18: "S",
         19: "S",
@@ -141,9 +141,9 @@ def print_blackjack_strategy_table(strategy_dict):
 
 
 def print_dash(num):
-		for i in range(num):
-				print('-', end="")
-		print()
+    for i in range(num):
+        print('-', end="")
+    print()
 
 # Create deck and shuffle
 def create_deck():
@@ -161,7 +161,7 @@ def get_num_aces(hand):
         total -= 10
         num_aces -= 1
     return num_aces
-    	
+    
 # Evaluate the player's move
 def evaluate_move(player_hand, player_total, dealer_upcard, move):
     # Simplified basic strategy
@@ -189,14 +189,14 @@ def evaluate_move(player_hand, player_total, dealer_upcard, move):
             if strategy == 'Ds':
                 strategy = 'D'
     else:
-    	#hard totals
+        #hard totals
         strategy = basic_strategy.get("hard_totals", {}).get(player_total, "unknown")
         phrase = basic_phrases.get("hard_totals", {}).get(player_total, "unknown")
         if len(player_hand) != 2:
             if strategy == 'D':
                 strategy = 'H'
-    	
-   	# Handle cases where strategy is a dictionary (generated by generate_split_dict)
+    
+    # Handle cases where strategy is a dictionary (generated by generate_split_dict)
     if isinstance(strategy, dict):
         correct_move = strategy.get(dealer_upcard, "unknown")
     else:
@@ -336,7 +336,10 @@ while(True):
         print('Training Session Finished')
         print_dash(25)
         print(f'Wins: {wins}\nLosses: {losses}\nDraws: {draws}\n\nCorrect moves: {num_correct}\nIncorrect moves: {num_incorrect}\n')
-        print(f'Your accuracy: {num_correct/(num_correct+num_incorrect)}%')
+        if num_correct + num_incorrect > 0:
+            print(f'Your accuracy: {num_correct/(num_correct+num_incorrect)*100:.1f}%')
+        else:
+            print('Your accuracy: N/A (no moves made)')
         print_dash(25)				
         break
     elif str == 'chart':

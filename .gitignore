@@ -1,4 +1,6 @@
 build/
 venv/
+dist/
 21-v1.spec
 .gitignore
+__pycache__/
